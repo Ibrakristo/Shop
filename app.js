@@ -3,9 +3,12 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
+import createHttpError from 'http-errors';
+
+import 'dotenv/config'
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 var app = express();
@@ -14,22 +17,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+await mongoose.connect(process.env.MONGODBURL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+//routers
+import gamesRouter from './routes/games.js'
+import gameRouter from './routes/game.js'
+import searchRouter from './routes/search.js';
+app.use("/games", gamesRouter)
+app.use("/game", gameRouter)
+app.use("/search", searchRouter)
+app.use(function (req, res, next) {
+  next(createHttpError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+app.use(function (err, req, res, next) {
   // render the error page
+
   res.status(err.status || 500);
+  res.send(err.message)
 });
 
 export default app;

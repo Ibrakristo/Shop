@@ -7,7 +7,7 @@
 import app from '../app.js';
 import debugLib from 'debug';
 import http from 'http';
-const debug = debugLib('myApp');
+const debug = debugLib('Storio');
 
 
 /**
