@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 import Game from "./models/game.js";
 
 
-export async function increaseRequests() {
+export async function increaseRequests(next) {
     let requests = mongoose.connection.db.collection("requests")
     let request = await requests.findOne();
     try {
@@ -13,13 +13,13 @@ export async function increaseRequests() {
             return
         }
         if (request.count > 180) {
-            throw createHttpError(406, "Pleast try again in 5 minutes")
+            next(createHttpError(406, "Pleast try again in 5 minutes"))
         }
         await requests.updateOne({}, { $inc: { count: 1 } })
         return
     }
     catch (ex) {
-        throw createHttpError(500, ex.message);
+        next(createHttpError(500, ex.message));
     }
 }
 

@@ -6,7 +6,7 @@ import logger from 'morgan';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import createHttpError from 'http-errors';
-
+import cors from 'cors'
 import 'dotenv/config'
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,7 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
-
+app.use(cors({
+  origin: "http://localhost:5173",
+  optionsSuccessStatus: 200
+}))
 await mongoose.connect(process.env.MONGODBURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

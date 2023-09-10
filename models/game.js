@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const GameSchema = new mongoose.Schema({
     _id: Number,
     name: { type: String, required: true, index: true },
+    type: Number,
+    dlc: { type: [Number], ref: "Game" },
     header_image: String,
     screenshots: [String],
     movies: [String],

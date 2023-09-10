@@ -10,7 +10,7 @@ router.get("/featured", checkForRequest, async (req, res, next) => {
     try {
         if (req.featured === false) {
 
-            await increaseRequests(req, res);
+            await increaseRequests(next);
             mongoose.connection.db.collection("requests").updateOne({}, { $set: { featuredHasChanged: true } });
             let info = await fetch("https://store.steampowered.com/api/featuredcategories");
             info = await info.json();
@@ -44,7 +44,7 @@ router.get("/bestsellers", checkForRequest, async (req, res, next) => {
     try {
 
         if (req.bestSeller === false) {
-            await increaseRequests(req, res);
+            await increaseRequests(next);
             mongoose.connection.db.collection("requests").updateOne({}, { $set: { bestSellerHasChanged: true } });
             let data = await fetch("https://store.steampowered.com/search/?filter=topsellers");
             data = await data.text()
@@ -60,10 +60,12 @@ router.get("/bestsellers", checkForRequest, async (req, res, next) => {
 
                     let name = item(".title").text();
                     let header_image = item("img").attr("src");
-                    const original = 1 - Number(item(".col.search_discount_and_price.responsive_secondrow").children().first().attr("data-discount")) / 100;
-                    let price = item(".col.search_price_discount_combined.responsive_secondrow").attr("data-price-final");
 
-                    let original_price = original ? (price / original) : Number(price);
+                    header_image = header_image.replace(/capsule_sm_120\w*.jpg/, "header.jpg");
+                    const original = 1 - Number(item(".col.search_discount_and_price.responsive_secondrow").children().first().attr("data-discount")) / 100;
+                    let price = Number(item(".col.search_price_discount_combined.responsive_secondrow").attr("data-price-final"));
+
+                    let original_price = original ? (price / original) : price;
                     original_price = original_price.toFixed(0)
                     let obj = { _id: id, name, header_image, original_price, isBestSeller: true };
                     arr.push(obj)

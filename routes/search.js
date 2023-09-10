@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
     try {
-        increaseRequests();
+        increaseRequests(next);
         const name = req.query.name;
         let data = await fetch(`https://store.steampowered.com/search?term=${name}`);
         data = await data.text();
@@ -22,6 +22,8 @@ router.get("/", async (req, res, next) => {
                 }
                 let name = item(".title").text();
                 let header_image = item("img").attr("src");
+                header_image = header_image.replace(/capsule_sm_120\w*.jpg/, "header.jpg");
+
                 const original = 1 - Number(item(".col.search_discount_and_price.responsive_secondrow").children().first().attr("data-discount")) / 100;
                 let price = item(".col.search_price_discount_combined.responsive_secondrow").attr("data-price-final");
                 let original_price = original ? (price / original) : Number(price);
