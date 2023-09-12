@@ -25,8 +25,8 @@ router.get("/", async (req, res, next) => {
             data = await data.json();
             data = data[id].data;
             if (data.type === "game") {
-                if (!data.is_free || data.price_overview.initial) {
-                    res.json("WE DON'T SUPPORT THIS TYPE OF GAME");
+                if (!data.is_free && !data.price_overview) {
+                    next(createHttpError(500, "WE DON'T SUPPORT THIS TYPE OF GAME"));
                     return;
                 }
                 let obj = {
@@ -39,7 +39,7 @@ router.get("/", async (req, res, next) => {
                         let data = await fetch(`http://store.steampowered.com/api/appdetails?appids=${id}&l=english`);
                         data = await data.json();
                         data = data[id].data;
-                        if (!data.is_free || data.price_overview.initial) {
+                        if (!data.is_free && !data.price_overview) {
                             return;
                         }
                         let dlc = {
@@ -48,10 +48,10 @@ router.get("/", async (req, res, next) => {
                         dlcs.push(dlc)
                         await Game.findOneAndUpdate({ _id: id }, dlc, { upsert: true });
                     })
-
                     await Promise.all(prs);
                     obj.dlc = dlcs;
                     res.json(obj);
+                    console.log(obj.dlc)
                     obj.dlc = obj.dlc.map(item => {
                         return item._id;
                     })
