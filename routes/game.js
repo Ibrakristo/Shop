@@ -51,7 +51,6 @@ router.get("/", async (req, res, next) => {
                     await Promise.all(prs);
                     obj.dlc = dlcs;
                     res.json(obj);
-                    console.log(obj.dlc)
                     obj.dlc = obj.dlc.map(item => {
                         return item._id;
                     })
