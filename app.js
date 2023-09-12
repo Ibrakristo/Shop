@@ -24,8 +24,7 @@ app.use(cors({
 await mongoose.connect(process.env.MONGODBURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
-
+})
 //routers
 import gamesRouter from './routes/games.js'
 import gameRouter from './routes/game.js'

@@ -12,7 +12,7 @@ router.get("/featured", checkForRequest, async (req, res, next) => {
 
             await increaseRequests(next);
             mongoose.connection.db.collection("requests").updateOne({}, { $set: { featuredHasChanged: true } });
-            let info = await fetch("https://store.steampowered.com/api/featuredcategories");
+            let info = await fetch("https://store.steampowered.com/api/featuredcategories?l=english");
             info = await info.json();
             info = info.specials.items;
             info.forEach((item) => {
@@ -46,7 +46,7 @@ router.get("/bestsellers", checkForRequest, async (req, res, next) => {
         if (req.bestSeller === false) {
             await increaseRequests(next);
             mongoose.connection.db.collection("requests").updateOne({}, { $set: { bestSellerHasChanged: true } });
-            let data = await fetch("https://store.steampowered.com/search/?filter=topsellers");
+            let data = await fetch("https://store.steampowered.com/search/?filter=topsellers&l=english");
             data = await data.text()
             const $ = cheerio.load(data);
             const arr = [];

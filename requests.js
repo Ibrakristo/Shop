@@ -26,6 +26,7 @@ export async function increaseRequests(next) {
 export async function checkForRequest(req, res, next) {
     let requests = mongoose.connection.db.collection("requests")
     let request = await requests.findOne();
+
     if (moment.duration(moment().diff(moment(request.dailyDate))).asHours() > 24) {
         request = await requests.findOneAndUpdate({}, { $set: { bestSellerHasChanged: false, featuredHasChanged: false, dailyDate: Date.now() }, $inc: { count: 1 } });
         Game.updateMany({ $or: [{ isFeatured: true }, { isBestSeller: true }] }, { isFeatured: false, isBestSeller: false }).exec();

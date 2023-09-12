@@ -20,7 +20,7 @@ router.get("/", async (req, res, next) => {
 
             increaseRequests(next);
 
-            let data = await fetch(`http://store.steampowered.com/api/appdetails?appids=${id}`);
+            let data = await fetch(`http://store.steampowered.com/api/appdetails?appids=${id}&l=english`);
 
             data = await data.json();
             data = data[id].data;

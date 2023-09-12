@@ -9,7 +9,7 @@ router.get("/", async (req, res, next) => {
     try {
         increaseRequests(next);
         const name = req.query.name;
-        let data = await fetch(`https://store.steampowered.com/search?term=${name}`);
+        let data = await fetch(`https://store.steampowered.com/search?term=${name}&l=english`);
         data = await data.text();
         const $ = cheerio.load(data);
         const arr = [];
