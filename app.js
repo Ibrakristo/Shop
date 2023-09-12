@@ -16,7 +16,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, './public')));
 app.use(cors({
   origin: "http://localhost:5173",
   optionsSuccessStatus: 200
@@ -26,12 +26,14 @@ await mongoose.connect(process.env.MONGODBURL, {
   useUnifiedTopology: true,
 })
 //routers
-import gamesRouter from './routes/games.js'
-import gameRouter from './routes/game.js'
-import searchRouter from './routes/search.js';
-app.use("/games", gamesRouter)
-app.use("/game", gameRouter)
-app.use("/search", searchRouter)
+
+import apiRouter from './routes/api.js'
+
+app.use("/api", apiRouter)
+
+app.use("*", (req, res) => {
+  res.redirect("http://localhost:3000")
+})
 app.use(function (req, res, next) {
   next(createHttpError(404));
 });
