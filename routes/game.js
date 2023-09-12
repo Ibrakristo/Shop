@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
             data = data[id].data;
             if (data.type === "game") {
                 let obj = {
-                    _id: id, type: 0, name: data.name, original_price: data.is_free ? 0 : data.price_overview.initial, header_image: data.header_image, desc: data.short_description, developers: data.developers, publishers: data.publishers, score: data.metacritic?.score, screenshots: data.screenshots.map(screen => (screen.path_full)), movies: data.movies.map((movie) => (movie.webm.max)), releaseDate: { coming_soon: data.release_date.coming_soon, date: new Date(data.release_date.date) }, genres: data.genres.map(genre => (genre.description)), dlc: data.dlc
+                    _id: id, type: 0, name: data.name, original_price: data.is_free ? 0 : data.price_overview.initial, header_image: data.header_image, desc: data.short_description, developers: data.developers, publishers: data.publishers, score: data.metacritic?.score, screenshots: data?.screenshots?.map(screen => (screen.path_full)), movies: data?.movies?.map((movie) => (movie.webm.max)), releaseDate: { coming_soon: data.release_date.coming_soon, date: new Date(data.release_date.date) }, genres: data.genres?.map(genre => (genre.description)), dlc: data.dlc
                 }
                 let dlcs = [];
                 if (data.dlc) {
@@ -36,7 +36,7 @@ router.get("/", async (req, res, next) => {
                         data = await data.json();
                         data = data[id].data;
                         let dlc = {
-                            _id: id, type: 1, name: data.name, original_price: data.is_free ? 0 : data.price_overview.initial, header_image: data.header_image, desc: data.short_description, developers: data.developers, publishers: data.publishers, score: data.metacritic?.score, screenshots: data.screenshots.map(screen => (screen.path_full)), movies: data.movies.map((movie) => (movie.webm.max)), releaseDate: { coming_soon: data.release_date.coming_soon, date: new Date(data.release_date.date) }, genres: data?.genres.map(genre => (genre.description)), dlc: data.dlc
+                            _id: id, type: 1, name: data.name, original_price: data.is_free ? 0 : data.price_overview.initial, header_image: data.header_image, desc: data.short_description, developers: data.developers, publishers: data.publishers, score: data.metacritic?.score, screenshots: data.screenshots?.map(screen => (screen.path_full)), movies: data.movies?.map((movie) => (movie.webm.max)), releaseDate: { coming_soon: data.release_date.coming_soon, date: new Date(data.release_date.date) }, genres: data.genres?.map(genre => (genre.description))
                         }
                         dlcs.push(dlc)
                         await Game.findOneAndUpdate({ _id: id }, dlc, { upsert: true });

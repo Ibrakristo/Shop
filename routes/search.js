@@ -44,5 +44,16 @@ router.get("/", async (req, res, next) => {
     }
 })
 
+router.post("/loadingcontent", async (req, res, next) => {
+    try {
+
+        let body = req.body;
+        let apps = await Game.find({ _id: { $nin: body } }).limit(20);
+        res.json(apps);
+    }
+    catch (ex) {
+        next(createHttpError(500, ex))
+    }
+})
 export default router;
 
