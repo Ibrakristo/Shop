@@ -32,7 +32,7 @@ import apiRouter from './routes/api.js'
 app.use("/api", apiRouter)
 
 app.use("*", (req, res) => {
-  res.redirect("http://localhost:3000")
+  res.redirect("/")
 })
 app.use(function (req, res, next) {
   next(createHttpError(404));
