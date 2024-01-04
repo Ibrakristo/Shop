@@ -14,6 +14,7 @@ export async function increaseRequests(next) {
         }
         if (request.count > 180) {
             next(createHttpError(406, "Pleast try again in 5 minutes"))
+            return;
         }
         await requests.updateOne({}, { $inc: { count: 1 } })
         return
